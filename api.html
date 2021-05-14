@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" >
+		<title>Space X API</title>
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="api.css">
+		<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+		<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<img src="images/logo.png" alt="spacexlogo" height="80" width="340">
+			</header>
+			<aside class="aside"></aside>
+			<main class="main">
+				<h2>Welkom terug, hier is uw landingsplaats te vinden. Ik wens u een prettige en fijne landing!</h2>
+				<div id="map">
+					<script type="text/javascript">
+					//landing site map
+					mapboxgl.accessToken = 'pk.eyJ1IjoidGFtYXJhZGV2cmllczk4IiwiYSI6ImNrOGszNDI1eTAxanozaG51Znp4YW9hMjYifQ.w6nEG3jRhAD5bVbO0jWQ9w';
+					var map = new mapboxgl.Map({
+					container: 'map',
+					style: 'mapbox://styles/mapbox/streets-v11', 
+					center: [4.764167, 52.308056],
+  					zoom: 15,
+					});
+					
+					var popup = new mapboxgl.Popup()
+					 .setHTML('<h3>Schiphol airport</h3><p>Dit is uw landingsplaats</p>');
+
+					var marker = new mapboxgl.Marker()
+					.setLngLat([4.764167, 52.308056])
+					.setPopup(popup)
+					.addTo(map);
+				</script>
+				</div>
+				<div>
+					<h2>Hier kan je het weer opzoeken voor jouw omgeving.</h2>
+					<div class="input">
+						<input type="text" class="input_text" placeholder="Zoek het weer op voor jouw stad">
+						<input type="submit" value="Submit" class="submit">
+					</div>
+					 <div class="display">
+					    <div class="card">
+					      <h1 class="name" id="name"></h1>
+					      <p class="temp"></p>
+					      <p class="clouds"></p>
+					      <p class="desc"></p>
+					    </div>
+					</div>
+					<script type="text/javascript">
+					   		var input = document.querySelector('.input_text');
+							var main = document.querySelector('#name');
+							var temp = document.querySelector('.temp');
+							var desc = document.querySelector('.desc');
+							var clouds = document.querySelector('.clouds');
+							var button= document.querySelector('.submit');
+							
+
+							button.addEventListener('click', function(name){
+
+							fetch('https://api.openweathermap.org/data/2.5/weather?q='+input.value+'&appid=03e6e9df6c9ba548c1ac43f40da8785b')
+							.then(response => response.json())
+							.then(data => {
+							  var tempValue = data['main']['temp'];
+							  var nameValue = data['name'];
+							  var descValue = data['weather'][0]['description'];
+
+							  main.innerHTML = nameValue;
+							  desc.innerHTML = "Desc - "+descValue;
+							  temp.innerHTML = "Temp - "+tempValue;
+							  input.value ="";
+
+							})
+
+							.catch(err => alert("Dit is de verkeerde stad!"));
+							})
+					</script>
+				</div>
+			</main>
+		</div>
+	</body>
+</html>
